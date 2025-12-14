@@ -30,10 +30,48 @@ export default function AINutritionDemo() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: input }),
     });
-
+    setFoods([]);
+    setAdded([]);
     const data = await res.json();
     setFoods(data.foods || []);
     setLoading(false);
+  }
+
+  async function handleAddMacros(f: Food, i: number){
+    try {
+    console.log(f);
+    console.log(i);
+    //now the post request to send data to db
+
+    //okay let's create the body first
+    const consumedAt = new Date().toISOString();
+    const body = {
+      name: f.name,
+      calories: Number(f.calories),
+      protein: Number(f.protein),
+      fat: Number(f.fat),
+      carbs: Number(f.carbs),
+      sugar: Number(f.sugar),
+      caffeine: Number(f.caffeine),
+      consumedAt,
+    }
+    console.log("sending payload", body);
+    const res = await fetch('/api/macros/new', {
+      method: "POST",
+      headers: {"Content-type": "application.json"},
+      body: JSON.stringify(body),
+    })
+    if(!res.ok){
+      throw new Error("Failed to add macros");
+      return;
+    }
+    const data = res.json();
+    console.log(data);
+    setAdded((prev) => [...prev, i]);
+    } catch (error) {
+      alert("error occured while adding");
+      console.log("error", error);
+    }
   }
 
   return (
@@ -60,12 +98,14 @@ export default function AINutritionDemo() {
         <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
 
           {/* Header */}
-          <div className="grid grid-cols-6 gap-2 px-3 py-2 text-xs text-slate-400 border-b border-slate-700">
+          <div className="grid grid-cols-8 gap-2 px-3 py-2 text-xs text-slate-400 border-b border-slate-700">
             <div>Food</div>
             <div className="text-center">Cal</div>
             <div className="text-center">Protein</div>
             <div className="text-center">Carbs</div>
             <div className="text-center">Fat</div>
+            <div className="text-center">Sugar</div>
+            <div className="text-center">Caffeine</div>
             <div className="text-center">Add into daily macro</div>
           </div>
 
@@ -74,20 +114,23 @@ export default function AINutritionDemo() {
             {foods.map((f, i) => (
               <div
                 key={i}
-                className="grid grid-cols-6 gap-2 px-3 py-2 items-center"
+                className="grid grid-cols-8 gap-2 px-3 py-2 items-center"
               >
                 <div className="truncate w-full">{f.name}</div>
                 <div className="text-center">{f.calories}</div>
                 <div className="text-center">{f.protein}</div>
                 <div className="text-center">{f.carbs}</div>
                 <div className="text-center">{f.fat}</div>
+                <div className="text-center">{f.sugar}</div>
+                <div className="text-center">{f.caffeine}</div>
+
 
                 <div className="text-center">
                   {added.includes(i) ? (
                     <span className="text-green-400 text-xs">Added</span>
                   ) : (
                     <button
-                      onClick={() => setAdded((prev) => [...prev, i])}
+                      onClick={() => handleAddMacros(f, i)}
                       className="text-blue-400 hover:text-blue-300 text-lg"
                     >
                       ➕
