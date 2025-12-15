@@ -17,7 +17,7 @@ export async function GET() {
       date: { $regex: `^${prefix}` },
     }).sort({ date: 1 });
 
-    console.log(days[0].foods);
+    console.log(days);
     // Format for UI
     const formatted = days.map((d) => ({
       date: d.date,
