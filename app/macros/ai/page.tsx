@@ -92,56 +92,62 @@ export default function AINutritionDemo() {
       >
         {loading ? "Analyzing..." : "Get Nutrition (AI)"}
       </button>
-
-      {/* Result Grid Table */}
-      {foods.length > 0 && (
-        <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 overflow-hidden">
-
-          {/* Header */}
-          <div className="grid grid-cols-8 gap-2 px-3 py-2 text-xs text-slate-400 border-b border-slate-700">
-            <div>Food</div>
-            <div className="text-center">Calories</div>
-            <div className="text-center">Protein</div>
-            <div className="text-center">Carbs</div>
-            <div className="text-center">Fat</div>
-            <div className="text-center">Sugar</div>
-            <div className="text-center">Caffeine</div>
-            <div className="text-center">Add into daily macro</div>
-          </div>
-
           {/* Rows */}
-          <div className="divide-y divide-slate-800">
-            {foods.map((f, i) => (
-              <div
-                key={i}
-                className="grid grid-cols-8 gap-2 px-3 py-2 items-center"
-              >
-                <div className="truncate w-full">{f.name}</div>
-                <div className="text-center">{f.calories}</div>
-                <div className="text-center">{f.protein}</div>
-                <div className="text-center">{f.carbs}</div>
-                <div className="text-center">{f.fat}</div>
-                <div className="text-center">{f.sugar}</div>
-                <div className="text-center">{f.caffeine}</div>
+          <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900 overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="bg-slate-900 border-b border-slate-800">
+              <tr className="text-xs text-slate-400">
+                <th className="px-4 py-2 text-left font-medium">Food</th>
+                <th className="px-4 py-2 text-right font-medium">Calories</th>
+                <th className="px-4 py-2 text-right font-medium">Protein</th>
+                <th className="px-4 py-2 text-right font-medium">Carbs</th>
+                <th className="px-4 py-2 text-right font-medium">Fat</th>
+                <th className="px-4 py-2 text-right font-medium">Sugar</th>
+                <th className="px-4 py-2 text-right font-medium">Caffeine</th>
+                <th className="px-4 py-2 text-center font-medium">Add</th>
+              </tr>
+            </thead>
 
+            <tbody>
+              {foods.map((food, i) => (
+                <tr
+                  key={i}
+                  className="border-t border-slate-800 hover:bg-slate-900/60"
+                >
+                  <td className="px-4 py-2 max-w-[180px]">
+                    <p className="truncate" title={food.name}>
+                      {food.name}
+                    </p>
+                  </td>
 
-                <div className="text-center">
-                  {added.includes(i) ? (
-                    <span className="text-green-400 text-xs">Added</span>
-                  ) : (
-                    <button
-                      onClick={() => handleAddMacros(f, i)}
-                      className="text-blue-400 hover:text-blue-300 text-lg"
-                    >
-                      ➕
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
+                  <td className="px-4 py-2 text-right">{food.calories}</td>
+                  <td className="px-4 py-2 text-right">{food.protein}</td>
+                  <td className="px-4 py-2 text-right">{food.carbs}</td>
+                  <td className="px-4 py-2 text-right">{food.fat}</td>
+                  <td className="px-4 py-2 text-right">{food.sugar}</td>
+                  <td className="px-4 py-2 text-right">{food.caffeine}</td>
+
+                  {/* ✅ ADD LOGIC */}
+                  <td className="px-4 py-2 text-center">
+                    {added.includes(i) ? (
+                      <span className="text-green-400 text-xs font-medium">
+                        Added
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => handleAddMacros(food, i)}
+                        className="text-blue-400 hover:text-blue-300 text-lg"
+                        title="Add to daily macros"
+                      >
+                        ➕
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           </div>
-        </div>
-      )}
     </div>
   );
 }
