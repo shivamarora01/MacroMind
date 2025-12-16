@@ -87,6 +87,11 @@ export default function NewMacroPage() {
               {message}
             </p>
           </div>
+          <div className="mt-5 relative z-10 px-6 py-3 rounded-lg bg-slate-900 border border-slate-700 shadow-lg">
+            <p className="text-green-400 text-sm text-center">
+              Month's Log
+            </p>
+          </div>
         </div>
       )}
 
