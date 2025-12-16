@@ -66,66 +66,10 @@ type IntakeItem = {
   caffeine: number;     // mg
 };
 
-const todayItems: IntakeItem[] = [
-  {
-    name: "Black Coffee",
-    quantity: "1 cup",
-    calories: 5,
-    protein: 0,
-    carbs: 1,
-    fat: 0,
-    sugar: 0,
-    caffeine: 80,
-  },
-  {
-    name: "Oats with Milk",
-    quantity: "1 bowl",
-    calories: 250,
-    protein: 10,
-    carbs: 40,
-    fat: 5,
-    sugar: 8,
-    caffeine: 0,
-  },
-  {
-    name: "Grilled Chicken & Rice",
-    quantity: "1 plate",
-    calories: 550,
-    protein: 35,
-    carbs: 60,
-    fat: 15,
-    sugar: 2,
-    caffeine: 0,
-  },
-];
-
-function getTotals(items: IntakeItem[]) {
-  return items.reduce(
-    (acc, item) => {
-      acc.calories += item.calories;
-      acc.protein += item.protein;
-      acc.carbs += item.carbs;
-      acc.fat += item.fat;
-      acc.sugar += item.sugar;
-      acc.caffeine += item.caffeine;
-      return acc;
-    },
-    {
-      calories: 0,
-      protein: 0,
-      carbs: 0,
-      fat: 0,
-      sugar: 0,
-      caffeine: 0,
-    }
-  );
-}
-
 export default function MonthPage() {
   const [monthData, setMonthData] = useState<DayData[]>([]);
   const [selected, setSelected] = useState<DayData | null>(null);
   const [goal, setGoal] = useState<Goal | null>(null);
-  const totals = getTotals(todayItems);
   const foods = selected?.foods?? [];
   console.log("monthData", monthData);
   console.log(selected);
@@ -234,9 +178,6 @@ export default function MonthPage() {
             <h2 className="text-sm font-medium text-slate-200">
               Items consumed today
             </h2>
-            <span className="text-xs text-slate-400">
-              {todayItems.length} item{todayItems.length !== 1 ? "s" : ""}
-            </span>
           </div>
 
           <div className="overflow-x-auto">
@@ -258,7 +199,7 @@ export default function MonthPage() {
                     key={idx}
                     className="border-t border-slate-800 hover:bg-slate-900/60"
                   >
-                    <td className="px-4 py-2 line-clamp 1">{food.name}</td>
+                    <td className="px-4 py-2 line-clamp 1 truncate">{food.name}</td>
                     <td className="px-4 py-2 text-right">{food.calories}</td>
                     <td className="px-4 py-2 text-right">{food.protein}</td>
                     <td className="px-4 py-2 text-right">{food.carbs}</td>
@@ -275,7 +216,7 @@ export default function MonthPage() {
                     {selected?.calories}
                   </td>
                   <td className="px-4 py-2 text-right font-semibold">
-                    {totals.protein}
+                    {selected?.protein}
                   </td>
                   <td className="px-4 py-2 text-right font-semibold">
                     {selected?.carbs}
