@@ -1,20 +1,32 @@
 import mongoose from "mongoose";
 
+const foodSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  calories: { type: Number, required: true },
+  protein: { type: Number, required: true },
+  carbs: { type: Number, required: true },
+  fat: { type: Number, required: true },
+  sugar: { type: Number, default: 0 },
+  caffeine: { type: Number, default: 0 },
+  consumedAt: { type: Date, required: true }, // timestamp for this food
+});
+
 const macroSchema = new mongoose.Schema(
   {
-  name: {type: String},
-  calories: {type: Number},
-  sugar: {type: Number},
-  fat: {type: Number},
-  protein: {type: Number},
-  caffine: {type: Number},
-  carbs: {type: Number},
-  quantity: {type: Number, default: 1},
-  unit: {type: String, default:""},
-  consumedAt: {type: Date, required: true},
-  userId: {type: String}
-  },
-  {timestamps: true}
-)
+    date: { type: String, required: true },  
+    // Example: "2025-12-11"
+    calories: { type: Number, default: 0 },
+    protein: { type: Number, default: 0 },
+    carbs: { type: Number, default: 0 },
+    fat: { type: Number, default: 0 },
+    sugar: { type: Number, default: 0 },
+    caffeine: { type: Number, default: 0 },
 
-export default mongoose.models.macros || mongoose.model("macros", macroSchema)
+    foods: [foodSchema], // list of foods eaten on this day
+
+    userId: { type: String, default: null },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.models.Macros || mongoose.model("Macros", macroSchema);

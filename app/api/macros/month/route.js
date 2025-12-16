@@ -28,6 +28,7 @@ export async function GET() {
       fat: d.fat,
       sugar: d.sugar,
       caffeine: d.caffeine,
+      foods: d.foods
     }));
 
     return Response.json(formatted);

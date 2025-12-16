@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function NewMacroPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [calories, setCalories] = useState("");
   const [protein, setProtein] = useState("");
@@ -193,6 +195,22 @@ export default function NewMacroPage() {
           </button>
         </form>
       </div>
+      {/* 🤖 AI Button */}
+<button
+  onClick={() => router.push("/macros/ai")}
+  className="fixed bottom-6 right-6 z-50
+             flex items-center gap-2
+             bg-purple-600 hover:bg-purple-500
+             text-white
+             px-4 py-3
+             rounded-full
+             shadow-xl transition
+             active:scale-95"
+>
+  <span className="text-xl">🤖</span>
+  <span className="text-sm font-medium">Ask AI</span>
+</button>
+
     </main>
   );
 }

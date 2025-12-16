@@ -100,7 +100,7 @@ export default function AINutritionDemo() {
           {/* Header */}
           <div className="grid grid-cols-8 gap-2 px-3 py-2 text-xs text-slate-400 border-b border-slate-700">
             <div>Food</div>
-            <div className="text-center">Cal</div>
+            <div className="text-center">Calories</div>
             <div className="text-center">Protein</div>
             <div className="text-center">Carbs</div>
             <div className="text-center">Fat</div>
