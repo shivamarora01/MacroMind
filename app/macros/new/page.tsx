@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function NewMacroPage() {
   const router = useRouter();
@@ -63,14 +63,34 @@ export default function NewMacroPage() {
       setMessage("Something went wrong.");
     }
   }
+  useEffect(() => {
+  if (!message) return;
+
+  const timer = setTimeout(() => {
+    setMessage("");
+  }, 1000); // ⏱ 1 second
+
+  return () => clearTimeout(timer);
+}, [message]);
+
 
   return (
     <main className="min-h-screen bg-slate-950 text-white flex justify-center items-start py-12">
-      {message && (
-       <p className="text-center mt-3 text-sm text-green-400">{message}</p>
-      )}
-      <div className="w-full max-w-md px-4">
+{message && (
+  <div className="fixed inset-0 z-50 flex items-start justify-center pt-100">
+    {/* Backdrop */}
+    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
+    {/* Message box */}
+    <div className="relative z-10 px-6 py-3 rounded-lg bg-slate-900 border border-slate-700 shadow-lg">
+      <p className="text-green-400 text-sm text-center">
+        {message}
+      </p>
+    </div>
+  </div>
+)}
+
+      <div className="relative w-full max-w-md px-4 z-10">
         <h1 className="text-2xl font-semibold mb-2">Add Food / Drink</h1>
         <p className="text-sm text-slate-400 mb-6">
           Log what you consumed and its macros.
@@ -196,21 +216,20 @@ export default function NewMacroPage() {
         </form>
       </div>
       {/* 🤖 AI Button */}
-<button
-  onClick={() => router.push("/macros/ai")}
-  className="fixed bottom-6 right-6 z-50
-             flex items-center gap-2
-             bg-purple-600 hover:bg-purple-500
-             text-white
-             px-4 py-3
-             rounded-full
-             shadow-xl transition
-             active:scale-95"
->
-  <span className="text-xl">🤖</span>
-  <span className="text-sm font-medium">Ask AI</span>
-</button>
-
+      <button
+        onClick={() => router.push("/macros/ai")}
+        className="fixed bottom-6 right-6 z-50
+                  flex items-center gap-2
+                  bg-purple-600 hover:bg-purple-500
+                  text-white
+                  px-4 py-3
+                  rounded-full
+                  shadow-xl transition
+                  active:scale-95"
+      >
+        <span className="text-xl">🤖</span>
+        <span className="text-sm font-medium">Ask AI</span>
+      </button>
     </main>
   );
 }
