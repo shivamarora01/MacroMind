@@ -1,9 +1,5 @@
 "use client";
-
 import { useEffect, useState } from "react";
-
-
-
 type DayData = {
   date: string;
   dayNumber: number;
@@ -15,7 +11,6 @@ type DayData = {
   caffeine: number;
   foods: IntakeItem[];
 };
-
 
 type Goal = {
   calories: number;
