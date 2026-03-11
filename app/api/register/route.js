@@ -2,8 +2,10 @@
 
 //connect the db
 //get data from model
-
+import bcrypt from "bcrypt";
+import { APIError } from "../../../lib/APIError";
 import { connectDB } from "../../../lib/connectDB";
+import { withErrorWrapper } from "../../../lib/withErrorWrapper";
 import Register from './../../../models/register'
 
 //process to register
@@ -12,8 +14,30 @@ import Register from './../../../models/register'
 //3. check if mail already in db
 //4. if not , let the user register
 
-export async function POST(request){
-    connectDB();
-    console.log("db about to connect in register");
-    return Response.json({status: "ok"})
-}
+export const POST =  withErrorWrapper(async (request) => {
+    await connectDB();
+    //take data from request body by destructing
+    const body = await request.json();
+    const {email, fullname, password} = body;
+    if([email, fullname, password].some((field) => 
+        !field || field?.trim() === ""
+    )){
+        // throw new Error("ADD FIELDS PLS", 208)
+        throw new APIError("all fields should be filled Please", 400);
+    }
+    //5. check if the email already exisiting in db
+    const exisitingUser = await Register.findOne({email});
+    if(exisitingUser){
+        throw new APIError("User already exisiting", 400);
+    }
+    //6. if no email registerd, Create one
+    //hashing the password
+    //10 is salt rounds(security level)
+    const hashedPass = await bcrypt.hash(password, 10);
+    const newRegister = await Register.create({
+        email: body.email,
+        fullname: body.fullname,
+        password: hashedPass
+    })
+    return Response.json({status: "ok"}, {newRegister})
+})
