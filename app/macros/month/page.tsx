@@ -106,7 +106,8 @@ export default function MonthPage() {
         {/* CALENDAR */}
         <section className="p-4 bg-slate-900/60 rounded-xl border border-slate-800">
           <div className="grid grid-cols-7 gap-y-3 place-items-center">
-            {monthData.map((day) => (
+            {monthData?.length > 0 ? (
+            monthData.map((day) => (
               <div
                 key={day.date}
                 onClick={() => setSelected(day)}
@@ -119,7 +120,7 @@ export default function MonthPage() {
               >
                 {day.dayNumber}
               </div>
-            ))}
+            ))): <p>no data avaiable</p>}
           </div>
         </section>
 
@@ -168,7 +169,7 @@ export default function MonthPage() {
             </div>
           </section>
         )}
-                <section className="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
+        <section className="rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
           <div className="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
             <h2 className="text-sm font-medium text-slate-200">
               Items consumed today
