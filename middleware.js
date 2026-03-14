@@ -12,5 +12,5 @@ export function middleware(request){
 }
 //in export const config → matcher, you specify the routes where the middleware should run, which usually means the routes you want to secure or protect.
 export const config= {
-    matcher: ["/macros/today", "/"],
+    matcher: ["/macros/today"],
 }
