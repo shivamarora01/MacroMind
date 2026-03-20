@@ -18,7 +18,7 @@ export default function HomePage() {
       </div>
 
       {/* Title */}
-      <h1 className="text-4xl font-bold text-center mt-6 tracking-tight">
+      <h1 className="text-4xl font-bold text-center mt-6 tracking-tight pt-2">
         MacroMind
       </h1>
 
