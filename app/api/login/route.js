@@ -21,6 +21,7 @@ export const POST = withErrorWrapper(async(request) => {
     if(!exisitingUser){
         throw new APIError("No user exists with this email", 400);
     }
+    console.log("existingUser", exisitingUser);
     //if you get the exisitingUser, try matching the password via bcrypt hashing
     const passwordMatch = await bcrypt.compare(password, exisitingUser.password);
     if(!passwordMatch){
@@ -44,5 +45,6 @@ export const POST = withErrorWrapper(async(request) => {
         sameSite: "strict",
         maxAge: 60 * 60
     });
+    console.log("cookieStore", cookieStore);
     return Response.json({status: "ok", message: "You have logged in"})
 })
