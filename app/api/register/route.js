@@ -18,7 +18,9 @@ export const POST =  withErrorWrapper(async (request) => {
     await connectDB();
     //take data from request body by destructing
     const body = await request.json();
+    console.log("request", request, "body", body);
     const {email, fullname, password} = body;
+    console.log("Data entered in fields and sent to api ", {email, fullname, password});
     if([email, fullname, password].some((field) => 
         !field || field?.trim() === ""
     )){
@@ -27,6 +29,7 @@ export const POST =  withErrorWrapper(async (request) => {
     }
     //5. check if the email already exisiting in db
     const exisitingUser = await Register.findOne({email});
+    console.log(exisitingUser);
     if(exisitingUser){
         throw new APIError("User already exisiting", 400);
     }
