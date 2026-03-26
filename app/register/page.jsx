@@ -1,11 +1,13 @@
 "use client"
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { useState } from "react"
 export default function login(){
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [fullname, setFullname] = useState();
     const [message, setMessage] = useState(0);
+    const router = useRouter();
     const handleRegister = async () => {
         const registerData = {
             email,
@@ -18,7 +20,10 @@ export default function login(){
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(registerData)
         });
-        if(res.ok) setMessage("registered succesfully")
+        if(res.ok) {
+          setMessage("registered succesfully");
+          router.push("/");
+        }
         else setMessage("can't registered");
     }
 return (
