@@ -7,6 +7,9 @@ import { APIError } from "../../../lib/APIError";
 import { connectDB } from "../../../lib/connectDB";
 import { withErrorWrapper } from "../../../lib/withErrorWrapper";
 import Register from './../../../models/register'
+import jwt from 'jsonwebtoken'
+const JWT_SECRET = process.env.JWT_SECRET
+import { cookies } from "next/headers";
 
 //process to register
 //1. get all the data
@@ -29,7 +32,7 @@ export const POST =  withErrorWrapper(async (request) => {
     }
     //5. check if the email already exisiting in db
     const exisitingUser = await Register.findOne({email});
-    console.log(exisitingUser);
+    console.log("existingUser",exisitingUser);
     if(exisitingUser){
         throw new APIError("User already exisiting", 400);
     }
@@ -42,5 +45,24 @@ export const POST =  withErrorWrapper(async (request) => {
         fullname: body.fullname,
         password: hashedPass
     })
+    console.log("newregister",newRegister);
+    //on-regsiter we wanna set a token
+    const token = jwt.sign(
+        {email: newRegister.email},
+        JWT_SECRET,
+        {expiresIn: "1h"}
+    );
+    console.log("token", token);
+    //token we have, now set the cookies
+    const cookieStore = await cookies();
+    cookieStore.set("token", token, 
+        {httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+        maxAge: 60*60,
+        }
+    );
+    console.log("cookie", cookieStore);
+
     return Response.json({status: "ok"}, {newRegister})
 })

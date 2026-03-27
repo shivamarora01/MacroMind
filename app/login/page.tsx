@@ -1,11 +1,15 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function login(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
 
   //handle api call
   const handleLogin = async () => {
@@ -23,6 +27,7 @@ export default function login(){
     console.log(res);
     if(res.ok){
       setMessage("You have logged in!");
+      router.push(redirect);
     }
     else {
       setMessage("You can't login in");

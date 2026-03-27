@@ -5,12 +5,16 @@ export function middleware(request){
     const token = request.cookies.get("token");
     if(!token){
         //Redirect a user - Used when authentication fails.
-        return NextResponse.redirect(new URL("/login", request.url));
+        const loginUrl = new URL("/login", request.url);
+
+        //restore old preserve url
+        loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+        return NextResponse.redirect(loginUrl);
     }
     //NextResponse.next() → allows the request to continue to the next route/page.
     return NextResponse.next();
 }
 //in export const config → matcher, you specify the routes where the middleware should run, which usually means the routes you want to secure or protect.
 export const config= {
-    matcher: ["/macros/today"],
+    matcher: ["/macros/today", "/macros/goals", "/macros/month", "/macros/new", "/"],
 }
