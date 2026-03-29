@@ -42,7 +42,8 @@ export const POST = withErrorWrapper(async(request) => {
     cookieStore.set("token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
         maxAge: 60 * 60
     });
     console.log("cookieStore", cookieStore);
