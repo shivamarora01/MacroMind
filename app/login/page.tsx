@@ -2,10 +2,12 @@
 import Link from "next/link"
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function login(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -58,13 +60,22 @@ return (
 
         <div className="flex flex-col space-y-1">
           <label className="text-sm text-slate-300">Password</label>
+          <div className="flex flex-col space-y-1 relative">
           <input
-            type="password"
+            type={showPassword? "text":"password"}
             value={password}
             onChange={(e) => {setPassword(e.target.value)}}
             placeholder="Enter your password"
             className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
+          <button
+            type="button"
+            onClick={()=>setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/4"
+            >
+              {showPassword? <FaEye/> : <FaEyeSlash/>}
+          </button>
+          </div>
         </div>
       </div>
 
