@@ -48,7 +48,7 @@ export const POST =  withErrorWrapper(async (request) => {
     console.log("newregister",newRegister);
     //on-regsiter we wanna set a token
     const token = jwt.sign(
-        {email: newRegister.email},
+        {userId: newRegister._id, email: newRegister.email},
         JWT_SECRET,
         {expiresIn: "1h"}
     );
