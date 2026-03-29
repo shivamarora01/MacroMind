@@ -13,7 +13,7 @@ export async function POST(request){
     const body = await request.json();
     console.log("body",body);
     const dateString = new Date(body.consumedAt).toISOString().slice(0, 10);
-    const existing = await Macros.findOne({ date: dateString });
+    const existing = await Macros.findOne({userId: userId ,  date: dateString });
 
     const foodItem = {
     name: body.name,
