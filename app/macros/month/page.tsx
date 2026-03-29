@@ -32,9 +32,9 @@ function MacroProgress({
   goal: number;
   unit: string;
 }) {
-  const percent = Math.min((value / goal) * 100, 100);
+  const percent = Math.min((Math.abs(value) / goal) * 100, 100);
   const color =
-    percent >= 100 ? "bg-red-500" : percent >= 60 ? "bg-green-500" : "bg-blue-500";
+    percent >= 100 ? "bg-red-500" : percent >= 70 ? "bg-blue-500" : "bg-red-500";
 
   return (
     <div className="space-y-1">

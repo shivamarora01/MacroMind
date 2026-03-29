@@ -4,16 +4,17 @@
 import { connectDB } from "../../../../lib/connectDB";
 import Macros from '../../../../models/macros'
 import { getUserIdFromToken } from "../../../../lib/getUserIdFromToken";
+import mongoose from "mongoose";
 
 export async function POST(request){
     await connectDB();
     const user = await getUserIdFromToken();
-    const userId = user.userId;
+    const userId = new mongoose.Types.ObjectId(user.userId);
     console.log("userId",userId);
     const body = await request.json();
     console.log("body",body);
     const dateString = new Date(body.consumedAt).toISOString().slice(0, 10);
-    const existing = await Macros.findOne({ date: dateString });
+    const existing = await Macros.findOne({userId: userId ,  date: dateString });
 
     const foodItem = {
     name: body.name,

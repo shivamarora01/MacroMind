@@ -1,7 +1,12 @@
 import mongoose from "mongoose";
 
 const goalSchema = new mongoose.Schema(
-  {
+ {
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   calories: {type: Number},
   sugar: {type: Number},
   fat: {type: Number},
@@ -12,4 +17,4 @@ const goalSchema = new mongoose.Schema(
   {timestamps: true}
 )
 
-export default mongoose.models.Goal|| mongoose.model("Goal", goalSchema)
+export default mongoose.models.Goal || mongoose.model("Goal", goalSchema)
