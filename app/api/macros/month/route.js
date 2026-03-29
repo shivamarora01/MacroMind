@@ -4,6 +4,7 @@ import Goal from "../../../../models/goals";
 //always import in curly when importing a function
 import {withErrorWrapper} from "../../../../lib/withErrorWrapper"
 import { verifyAuth } from "../../../../lib/verifyAuth";
+import { getUserIdFromToken } from "../../../../lib/getUserIdFromToken";
 
 // export async function GET() {
 //   try {
@@ -47,11 +48,14 @@ export const GET = withErrorWrapper(
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
+    const user = await getUserIdFromToken();
+    const userId = user.userId; 
 
     // Example: "2025-12"
     const prefix = `${year}-${month}`;
 
     const days = await Macros.find({
+      userId: userId,
       date: { $regex: `^${prefix}` },
     }).sort({ date: 1 });
 
