@@ -13,6 +13,11 @@ const foodSchema = new mongoose.Schema({
 
 const macroSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     date: { type: String, required: true },  
     // Example: "2025-12-11"
     calories: { type: Number, default: 0 },
@@ -23,8 +28,6 @@ const macroSchema = new mongoose.Schema(
     caffeine: { type: Number, default: 0 },
 
     foods: [foodSchema], // list of foods eaten on this day
-
-    userId: { type: String, default: null },
   },
   { timestamps: true }
 );
