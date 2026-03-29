@@ -3,10 +3,15 @@
 
 import { connectDB } from "../../../../lib/connectDB";
 import Macros from '../../../../models/macros'
+import { getUserIdFromToken } from "../../../../lib/getUserIdFromToken";
 
 export async function POST(request){
     await connectDB();
+    const user = await getUserIdFromToken();
+    const userId = user.userId;
+    console.log("userId",userId);
     const body = await request.json();
+    console.log("body",body);
     const dateString = new Date(body.consumedAt).toISOString().slice(0, 10);
     const existing = await Macros.findOne({ date: dateString });
 
@@ -36,6 +41,7 @@ export async function POST(request){
     return Response.json(existing);
   }
     const newMacro = await Macros.create({
+    userId: userId,
     date: dateString, 
     name: body.name,
     calories: body.calories,
