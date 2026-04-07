@@ -16,6 +16,7 @@ export async function POST(request){
     const dateString = new Date(body.consumedAt).toISOString().slice(0, 10);
     const existing = await Macros.findOne({userId: userId ,  date: dateString });
 
+    //fooditem
     const foodItem = {
     name: body.name,
     calories: body.calories,
