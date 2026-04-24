@@ -5,9 +5,26 @@ import Register from "./../../../models/register";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { ratelimiter } from "../../../lib/ratelimiter";
 const JWT_SECRET = process.env.JWT_SECRET
 
+//crate limiter
+const loginLimiter  =  ratelimiter({
+    window: 60*1000,
+    maxRequest: 5
+})
+
 export const POST = withErrorWrapper(async(request) => {
+
+    //get ip
+    const ip = request.headers.get("x-forwarded-for") ||  request.headers.get("x-real-ip") || "unknown";
+    console.log("this is the ip address",ip);
+    //check rate limit
+    const {allowed} = loginLimiter(ip);
+    //if not allowed return error
+    if(!allowed){
+        throw new APIError("Too many requests", 429);
+    }
     await connectDB();
     const body = await request.json();
     const {email, password} = body;

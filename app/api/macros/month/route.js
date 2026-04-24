@@ -61,7 +61,7 @@ export const GET = withErrorWrapper(
       date: { $regex: `^${prefix}` },
     }).sort({ date: 1 });
 
-    console.log(days);
+    console.log("days",days);
     // Format for UI
     const formatted = days.map((d) => ({
       date: d.date,
