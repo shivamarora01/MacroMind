@@ -29,11 +29,12 @@ export default function LoginClient(){
     });
     console.log(res);
     if(res.ok){
-      setMessage("You have logged in!");
       router.push(redirect);
     }
     else {
-      setMessage("You can't login in");
+      const data = await res.json();
+      const message = data.message;
+      setMessage(message);
     }
   }
 return (
@@ -77,6 +78,9 @@ return (
               {showPassword? <FaEye/> : <FaEyeSlash/>}
           </button>
           </div>
+          <p className="text-xs text-red-400">
+          {message}
+         </p>
         </div>
       </div>
 
@@ -85,7 +89,7 @@ return (
         className="w-full bg-blue-600 hover:bg-blue-500 rounded-lg py-2 font-medium text-sm transition"
         onClick={handleLogin}
          >
-        Login {message}
+        Login
       </button>
 
       {/* Footer */}
