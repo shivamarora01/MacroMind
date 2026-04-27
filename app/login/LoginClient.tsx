@@ -8,6 +8,7 @@ export default function LoginClient(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [disablerOn, setDisablerOn] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,7 +35,13 @@ export default function LoginClient(){
     else {
       const data = await res.json();
       const message = data.message;
-      setMessage(message);
+      const statusCode = res.status;
+      if(statusCode == 429) setDisablerOn(true);
+      setTimeout(()=>{
+        setDisablerOn(false);
+        setMessage("");
+      },60000)
+      console.log(statusCode);
     }
   }
 return (
@@ -86,10 +93,11 @@ return (
 
       {/* Login Button */}
       <button
-        className="w-full bg-blue-600 hover:bg-blue-500 rounded-lg py-2 font-medium text-sm transition"
+        className={`w-full rounded-lg py-2 font-medium text-sm transition ${disablerOn?"bg-gray-600 hover:bg-gray-500":"bg-blue-600 hover:bg-blue-500"}`}
+        disabled={disablerOn}
         onClick={handleLogin}
          >
-        Login
+        {disablerOn?"Please wait... too many requests":"Login"}
       </button>
 
       {/* Footer */}
