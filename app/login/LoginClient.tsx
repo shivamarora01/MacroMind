@@ -34,7 +34,7 @@ export default function LoginClient(){
     }
     else {
       const data = await res.json();
-      const message = data.message;
+      setMessage(data.message);
       const statusCode = res.status;
       if(statusCode == 429) setDisablerOn(true);
       setTimeout(()=>{

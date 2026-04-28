@@ -36,7 +36,7 @@ export const POST = withErrorWrapper(async(request) => {
     //if all good, write the query to check for Server
     const exisitingUser = await Register.findOne({email});
     if(!exisitingUser){
-        throw new APIError("No user exists with this email", 400);
+        throw new APIError("No user exists with this email", 401);
     }
     console.log("existingUser", exisitingUser);
     //if you get the exisitingUser, try matching the password via bcrypt hashing
