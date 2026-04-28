@@ -29,6 +29,10 @@ export default function login(){
           const data = await res.json();
           setMessage(data.message);
           if(res.status == 429){setDisabler(true)};
+          setTimeout(()=>{
+            setMessage("");
+            setDisabler(false)
+          },60000);
         }
     }
 return (
