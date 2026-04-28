@@ -10,6 +10,12 @@ import Register from './../../../models/register'
 import jwt from 'jsonwebtoken'
 const JWT_SECRET = process.env.JWT_SECRET
 import { cookies } from "next/headers";
+import { ApiError } from "next/dist/server/api-utils";
+import { ratelimiter } from "../../../lib/ratelimiter";
+const register_limiter = ratelimiter({
+    window: 60*1000,
+    maxRequest: 5
+})
 
 //process to register
 //1. get all the data
@@ -17,7 +23,12 @@ import { cookies } from "next/headers";
 //3. check if mail already in db
 //4. if not , let the user register
 
-export const POST =  withErrorWrapper(async (request) => {
+export const POST = withErrorWrapper(async (request) => {
+    const ip = request.headers.get("x-forwarded-for") ||  request.headers.get("x-real-ip");
+    const {allowed} = register_limiter(ip);
+    if(!allowed){
+        throw new APIError("Too many requests", 429);
+    }
     await connectDB();
     //take data from request body by destructing
     const body = await request.json();
@@ -28,13 +39,13 @@ export const POST =  withErrorWrapper(async (request) => {
         !field || field?.trim() === ""
     )){
         // throw new Error("ADD FIELDS PLS", 208)
-        throw new APIError("all fields should be filled Please", 400);
+        throw new APIError("Please fill all fields", 400);
     }
     //5. check if the email already exisiting in db
     const exisitingUser = await Register.findOne({email});
     console.log("existingUser",exisitingUser);
     if(exisitingUser){
-        throw new APIError("User already exisiting", 400);
+        throw new APIError("This mail already exisiting", 409);
     }
     //6. if no email registerd, Create one
     //hashing the password
