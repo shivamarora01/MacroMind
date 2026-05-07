@@ -1,3 +1,6 @@
+//This is a global middlware of next js, which redirects the user to login if no token present
+//In nextjs only one global middlware is there, you can add multiple by adding middleware functions
+
 import { NextResponse } from "next/server";
 //NextResponse is a class in Next.js used to create or modify HTTP responses, especially in middleware, route handlers, and Edge functions. It extends the standard Web Response API but adds extra Next.js features like redirects, rewrites, cookies, and headers.
 
