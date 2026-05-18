@@ -3,10 +3,11 @@ import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { useState } from "react"
 export default function login(){
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [fullname, setFullname] = useState();
-    const [message, setMessage] = useState(0);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [disabler, setDisabler] = useState(false);
+    const [fullname, setFullname] = useState("");
+    const [message, setMessage] = useState("");
     const router = useRouter();
     const handleRegister = async () => {
         const registerData = {
@@ -24,7 +25,15 @@ export default function login(){
           setMessage("registered succesfully");
           router.push("/");
         }
-        else setMessage("can't registered");
+        else {
+          const data = await res.json();
+          setMessage(data.message);
+          if(res.status == 429){setDisabler(true)};
+          setTimeout(()=>{
+            setMessage("");
+            setDisabler(false)
+          },60000);
+        }
     }
 return (
   <main className="min-h-screen bg-slate-950 text-white flex justify-center items-start py-12">
@@ -70,14 +79,18 @@ return (
             onChange={(e) => {setPassword(e.target.value)}}
           />
         </div>
+        <p className="text-xs text-red-400">
+          {message}
+         </p>
       </div>
 
       {/* Login Button */}
       <button
       onClick={handleRegister}
-        className="w-full bg-blue-600 hover:bg-blue-500 rounded-lg py-2 font-medium text-sm transition"
+        className={`w-full rounded-lg py-2 font-medium text-sm transition ${disabler?"bg-gray-600 hover:bg-gray-500 ":"bg-blue-600 hover:bg-blue-500"}`}
+        disabled={disabler}
       >
-        Register {message}
+        {disabler?"please wait for 1 min..":"Register"}
       </button>
 
       {/* Footer */}
@@ -86,7 +99,7 @@ return (
         <Link href="/login"
          className="text-blue-500 hover:underline cursor-pointer"
          >
-          Login {email}
+          Login
         </Link>
       </p>
 

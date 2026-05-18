@@ -8,6 +8,7 @@ export default function LoginClient(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [disablerOn, setDisablerOn] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,11 +30,18 @@ export default function LoginClient(){
     });
     console.log(res);
     if(res.ok){
-      setMessage("You have logged in!");
       router.push(redirect);
     }
     else {
-      setMessage("You can't login in");
+      const data = await res.json();
+      setMessage(data.message);
+      const statusCode = res.status;
+      if(statusCode == 429) setDisablerOn(true);
+      setTimeout(()=>{
+        setDisablerOn(false);
+        setMessage("");
+      },60000)
+      console.log(statusCode);
     }
   }
 return (
@@ -77,15 +85,19 @@ return (
               {showPassword? <FaEye/> : <FaEyeSlash/>}
           </button>
           </div>
+          <p className="text-xs text-red-400">
+          {message}
+         </p>
         </div>
       </div>
 
       {/* Login Button */}
       <button
-        className="w-full bg-blue-600 hover:bg-blue-500 rounded-lg py-2 font-medium text-sm transition"
+        className={`w-full rounded-lg py-2 font-medium text-sm transition ${disablerOn?"bg-gray-600 hover:bg-gray-500":"bg-blue-600 hover:bg-blue-500"}`}
+        disabled={disablerOn}
         onClick={handleLogin}
          >
-        Login {message}
+        {disablerOn?"Please wait... too many requests":"Login"}
       </button>
 
       {/* Footer */}
