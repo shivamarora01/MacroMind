@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { ratelimiter } from "../../../lib/ratelimiter";
 import { validateLogin } from "../../../lib/loginMiddleware";
 const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET_REFRESH = process.env.JWT_SECRET_REFRESH
 
 //crate limiter
 const loginLimiter  =  ratelimiter({
@@ -100,15 +101,41 @@ export const POST = withErrorWrapper(validateLogin(async(request) => {
         //can accept d, m, s-> day, month, seconds
         {expiresIn: "1h"}
     );
+    const refreshToken = jwt.sign(
+        //payload
+        {userId: exisitingUser.id},
+        //secret key diff
+        JWT_SECRET_REFRESH,
+        //expiry time
+        {expiresIn: "6d"}
+    )
     //Store the token in a cookie (session)
     //in newer Next.js (15+/16). cookies() is now async
     const cookieStore = await cookies();
     cookieStore.set("token", token, {
+        //Prevents JavaScript access. Protects against: XSS attacks
         httpOnly: true,
+        //Cookie sent only over HTTPS. Protects against: network sniffing
         secure: true,
+        //"strict", Helps prevent CSRF attacks. Browser won’t send cookie from other websites automatically.
         sameSite: "none",
         maxAge: 60 * 60
     });
+
+    cookieStore.set("refreshToken", refreshToken, {
+        httpOnly:  true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 6 * 24 * 60 * 60
+    })
+
+    //refresh token, store in db
+    exisitingUser.refreshToken = refreshToken;
+    await exisitingUser.save({validateBeforeSave: false});
+    const newToken = await exisitingUser.refreshToken
+    console.log("resfreshtoken saving", newToken);
+    
+    console.log("exisitinUser",exisitingUser);
     console.log("cookieStore", cookieStore);
     return Response.json({status: "ok", message: "You have logged in"})
 }))
