@@ -118,7 +118,7 @@ export const POST = withErrorWrapper(validateLogin(async(request) => {
         //Cookie sent only over HTTPS. Protects against: network sniffing
         secure: true,
         //"strict", Helps prevent CSRF attacks. Browser won’t send cookie from other websites automatically.
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 60 * 60
     });
 
