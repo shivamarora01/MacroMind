@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { ratelimiter } from "../../../lib/ratelimiter";
 import { validateLogin } from "../../../lib/loginMiddleware";
+import winston from "winston";
 const JWT_SECRET = process.env.JWT_SECRET
 const JWT_SECRET_REFRESH = process.env.JWT_SECRET_REFRESH
 
@@ -14,6 +15,31 @@ const JWT_SECRET_REFRESH = process.env.JWT_SECRET_REFRESH
 const loginLimiter  =  ratelimiter({
     window: 60*1000,
     maxRequest: 5
+})
+
+//create logger from winston
+//transports are destinations
+//console is what to show on terminal
+//File is where we will store the logs
+//level: "info" sets the minimum severity level that will be logged.
+//Winston's default priorities are:
+// error: 0 (highest priorty)
+// warn:  1
+// info:  2
+// http:  3
+// verbose: 4
+// debug: 5
+// silly: 6
+const logger = winston.createLogger({
+    level: "info",
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({filename: "login.js"})
+    ]
 })
 
 // export const POST = withErrorWrapper(async(request) => {
@@ -92,6 +118,7 @@ export const POST = withErrorWrapper(validateLogin(async(request) => {
     if(!passwordMatch){
         throw new APIError("Wrong Password", 400);
     }
+    logger.info("Password & Email Matched!!")
     //generate a JWT Token
     const token = jwt.sign(
         //payload data of user, not encrypted, just encoded
