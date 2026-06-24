@@ -15,6 +15,7 @@ export default function HomePage() {
           priority
           className="rounded-2xl mx-auto drop-shadow-[0px_0px_35px_rgba(0,158,255,0.3)]"
         />
+        
       </div>
 
       {/* Title */}
