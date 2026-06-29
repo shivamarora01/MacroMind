@@ -28,8 +28,9 @@ export default function LoginClient(){
       body: JSON.stringify(login_Data),
       credentials: "include"
     });
-    console.log(res);
-    if(res.ok){
+    console.log("response", res);
+    console.log("response ok?", res.ok);
+    if(res?.ok){
       console.log("Login successful");
       console.log("Redirect:", redirect);
       router.push(redirect);
