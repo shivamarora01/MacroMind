@@ -33,7 +33,8 @@ export default function LoginClient(){
     if(res?.ok){
       console.log("Login successful");
       console.log("Redirect:", redirect);
-      router.push(redirect);
+      router.refresh();
+      router.replace(redirect);
     }
     else {
       const data = await res.json();
