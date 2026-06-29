@@ -30,6 +30,8 @@ export default function LoginClient(){
     });
     console.log(res);
     if(res.ok){
+      console.log("Login successful");
+      console.log("Redirect:", redirect);
       router.push(redirect);
     }
     else {
