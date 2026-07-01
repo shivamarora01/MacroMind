@@ -10,12 +10,15 @@ export default function LoginClient(){
   const [showPassword, setShowPassword] = useState(false);
   const [disablerOn, setDisablerOn] = useState(false);
   const [message, setMessage] = useState("");
+  const [LoginButtonMessage, setLoginButtonMessage] = useState("Login");
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
 
   //handle api call
   const handleLogin = async () => {
+    setDisablerOn(true);
+    setLoginButtonMessage("Checking Crentials");
     const login_Data = {
       email,
       password
@@ -40,11 +43,23 @@ export default function LoginClient(){
       const data = await res.json();
       setMessage(data.message);
       const statusCode = res.status;
-      if(statusCode == 429) setDisablerOn(true);
-      setTimeout(()=>{
-        setDisablerOn(false);
-        setMessage("");
+      if(statusCode == 429) 
+      { 
+          setDisablerOn(true);
+          setLoginButtonMessage("Too many requests, try again after a minute");
+          setTimeout(()=>{
+          setDisablerOn(false);
+          setMessage("");
+          setLoginButtonMessage("");
       },60000)
+      }
+      else{
+          setTimeout(()=>{
+          setMessage("");
+          setDisablerOn(false);
+          setLoginButtonMessage("Login");
+        },1000)
+      }
       console.log(statusCode);
     }
   }
@@ -101,7 +116,7 @@ return (
         disabled={disablerOn}
         onClick={handleLogin}
          >
-        {disablerOn?"Please wait... too many requests":"Login"}
+        {LoginButtonMessage}
       </button>
 
       {/* Footer */}
