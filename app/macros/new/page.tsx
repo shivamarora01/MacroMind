@@ -47,7 +47,7 @@ export default function NewMacroPage() {
     if(!res.ok) throw new Error("Failed to Save");
 
     const data = await res.json();
-    setMessage("Saved succesfully!");
+    setMessage("Macros added succesfully!");
 
     // Clear fields
     setName("");
@@ -79,7 +79,7 @@ export default function NewMacroPage() {
       {message && (
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-100">
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
 
           {/* Message box */}
           <div className="relative z-10 px-6 py-3 rounded-lg bg-slate-900 border border-slate-700 shadow-lg">
@@ -87,15 +87,10 @@ export default function NewMacroPage() {
               {message}
             </p>
           </div>
-          <div className="mt-5 relative z-10 px-6 py-3 rounded-lg bg-slate-900 border border-slate-700 shadow-lg">
-            <p className="text-green-400 text-sm text-center">
-              Month's Log
-            </p>
-          </div>
         </div>
       )}
 
-      <div className="w-full max-w-md px-4 z-10">
+      <div className="w-full max-w-md px-4 z-0">
         <h1 className="text-2xl font-semibold mb-2">Add Food / Drink</h1>
         <p className="text-sm text-slate-400 mb-6">
           Log what you consumed and its macros.
